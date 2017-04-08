@@ -1,10 +1,11 @@
 {
-  "name": "demo",
+  "name": "liri",
   "version": "1.0.0",
   "description": "demo",
   "main": "bot.js",
   "dependencies": {
     "request": "^2.81.0",
+    "spotify": "^0.3.0",
     "twit": "^2.2.5"
   },
   "devDependencies": {},
@@ -12,6 +13,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "AMillena",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amillena/liri-node-app.git"
+  },
+  "keywords": [
+    "liri",
+    "liribot"
+  ],
+  "bugs": {
+    "url": "https://github.com/amillena/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/amillena/liri-node-app#readme"
 }

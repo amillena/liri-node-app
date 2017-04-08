@@ -3,10 +3,10 @@ var config=require('./keys');
 var action = process.argv[2];
 var request = require("request");
 var spotify = require('spotify');
+var fs = require ('fs');
 var songName = "";
 var movieName = "";
 var nodeArgs = process.argv;
-var fs = require ('fs');
 var sortData = [];
 
 switch (action) {
@@ -29,41 +29,37 @@ switch (action) {
     }
 //if no user input 
       if (songName === ""){
-      songName = "the+sign";
+      songName = "0hrBpAOgrt8RXigk83LLNE";
     }
    	spot(songName);
     break;
-
   case "do-what-it-says":
    	doWhat();
     break;
 }
 
 
-// ----------
+// ----twitter function------
 function twitter() {
 	myWrite("----------");
 	myWrite(action);
 	var T = new Twit(config); 
 	var params ={
-	q:'from%3AAmillena1',
+	q:'%3Aamillena1',
 	lang: 'en',
 	count: 20
 	};
 
 	T.get('search/tweets', params, gotData);
-
 	function gotData(err, data, response) {
 		var tweets = data.statuses;
 		for (var i = 0; i < tweets.length; i++){
 			console.log(tweets[i].text);
-			myWrite(tweets[i].text);
-			
+			myWrite(tweets[i].text);	
 		}	
 	};
-	
-
 };
+
 //---- movie search function ----
 function movieSearch(){
 // For-loop through all the words and to handle the inclusion of "+"s
@@ -126,23 +122,76 @@ request(queryUrl, function(error, response, body) {
   });
 };
 
+
 //----spotify function------
 function spot(songName){
 
 console.log("inside spotify function: "+songName);
-
-spotify.search({ type: 'track', query: songName }, 
-	function(err, data) {
-    if ( err ) {
+  if (songName === "0hrBpAOgrt8RXigk83LLNE"){
+    spotify.lookup({ type: 'track', id: '0hrBpAOgrt8RXigk83LLNE' }, 
+    function(err, data) {
+      if ( err ) {
         console.log('Error occurred: ' + err);
         return;
-    }   
+      } 
+        myWrite("----------");
+        myWrite(action);
+
+        var song = "Song Name: " + data.name;     
+        console.log(song); 
+        myWrite(song);
+
+        var artistName = "Artist Name: " + data.album.artists[0].name;
+        console.log(artistName);
+        myWrite(artistName);
+
+        var previewURL = "Preview URL: " + data.preview_url;
+        console.log(data.preview_url);  
+        myWrite(previewURL);
+
+        var albumName = "Album Name: " + data.album.name;
+        console.log(albumName);
+        myWrite(albumName);
+        return;
+    }); 
+
+	}else{
+    spotify.search({ type: 'track', query: '"'+songName+'"' }, 
+		function(err, data) {
+    	if ( err ) {
+        console.log('Error occurred: ' + err);
+        return;
+      }
+    // console.log(JSON.stringify(data, null, 4));   
+    displaySpotify(data);
+	 });
+  }
+}
+
+//-----reading from random.text----------
+function doWhat(){
+    fs.readFile('random.txt','utf8',function(err,data){
+// Clean up
+    str1 = data.split('"').join(' ')
+    str2 = str1.split(',').join(' ')
+    str3 = str2.replace('spotify-this-song',' ');
+    sortData.push(str3);
+	 var songName = sortData;
+    spot(songName);
+    });
+}
+// ---- Display spotify -----
+function displaySpotify(data){
    	myWrite("----------");
    	myWrite(action);
 
     var artistName = "Artist Name: " + data.tracks.items[0].artists[0].name;
     console.log(artistName);
     myWrite(artistName);
+
+    var song = "Song Name: " + data.tracks.items[0].name;
+    console.log(song);
+    myWrite(song);
 
     var previewURL = "Preview URL: " + data.tracks.items[0].preview_url;
     console.log(previewURL);
@@ -151,21 +200,8 @@ spotify.search({ type: 'track', query: songName },
     var albumName = "Album Name: " + data.tracks.items[0].album.name;
 	  console.log(albumName);
 	  myWrite(albumName);
-	});
 }
 
-//-----reading from random.text----------
-function doWhat(){
-fs.readFile('random.txt','utf8',function(err,data){
-// Cleaan up
-  str1 = data.split('"').join(' ')
-  str2 = str1.split(',').join(' ')
-  str3 = str2.replace('spotify-this-song',' ');
-  sortData.push(str3);
-	var songName = sortData;
-  spot(songName);
-});
-}
 
 // ----writing to log.txt----
 function myWrite(log){
@@ -175,3 +211,4 @@ function myWrite(log){
 		}
 	});
 }	
+
