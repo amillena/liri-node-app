@@ -1,7 +1,10 @@
+// require('dotenv').config();
+var request = require("request");
 var Twit=require('twit');
+//var T = new Twit(process.env.CONSUMER_KEY, process.env.CONSUMER_SECRET, process.env.ACCESS_TOKEN, process.env.ACCESS_TOKEN_SECRET); 
+//var config= (process.env.CONSUMER_KEY, process.env.CONSUMER_SECRET, process.env.ACCESS_TOKEN, process.env.ACCESS_TOKEN_SECRET);
 var config=require('./keys');
 var action = process.argv[2];
-var request = require("request");
 var spotify = require('spotify');
 var fs = require ('fs');
 var songName = "";
@@ -9,6 +12,7 @@ var movieName = "";
 var nodeArgs = process.argv;
 var sortData = [];
 
+//console.log (config);
 switch (action) {
   case "my-tweets":
     twitter();
@@ -43,8 +47,10 @@ switch (action) {
 function twitter() {
 	myWrite("----------");
 	myWrite(action);
-	var T = new Twit(config); 
-	var params ={
+	//var T = new Twit(process.env.CONSUMER_KEY, process.env.CONSUMER_SECRET, process.env.ACCESS_TOKEN, process.env.ACCESS_TOKEN_SECRET); 
+	
+  var T = new Twit(config)
+  var params ={
 	q:'%3Aamillena1',
 	lang: 'en',
 	count: 20
@@ -174,7 +180,7 @@ function doWhat(){
 // Clean up
     str1 = data.split('"').join(' ')
     str2 = str1.split(',').join(' ')
-    str3 = str2.replace('spotify-this-song',' ');
+    str3 = str2.replace('spotify-this-song',' ');  
     sortData.push(str3);
 	 var songName = sortData;
     spot(songName);
@@ -182,10 +188,11 @@ function doWhat(){
 }
 // ---- Display spotify -----
 function displaySpotify(data){
+    console.log(data);
    	myWrite("----------");
    	myWrite(action);
 
-    var artistName = "Artist Name: " + data.tracks.items[0].artists[0].name;
+    var artistName = "Artist Name: " + data.tracks.items[0].album.artists[0].name;
     console.log(artistName);
     myWrite(artistName);
 

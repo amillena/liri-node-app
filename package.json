@@ -4,6 +4,7 @@
   "description": "demo",
   "main": "bot.js",
   "dependencies": {
+    "dotenv": "^4.0.0",
     "request": "^2.81.0",
     "spotify": "^0.3.0",
     "twit": "^2.2.5"
